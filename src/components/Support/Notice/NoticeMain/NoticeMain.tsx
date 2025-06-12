@@ -1,6 +1,26 @@
+import { useLocation } from 'react-router-dom';
 import './styled.css';
+import axios from 'axios';
+import { useEffect } from 'react';
 
 export const NoticeMain = () => {
+  const { search } = useLocation();
+
+  useEffect(() => {
+    searchList();
+  }, [search]);
+
+  // 공지사항 조회를 해주는 함수
+  const searchList = (cPage?: number) => {
+    cPage = cPage || 1;
+
+    const searchPharam = new URLSearchParams(search);
+    searchPharam.append('curruentpage', cPage.toString());
+    searchPharam.append('pageSize', '5');
+
+    axios.post('/api/support/noticeListbody.do', searchPharam);
+  };
+
   return (
     <div className="notice-main-container">
       <table className="notice-table">
