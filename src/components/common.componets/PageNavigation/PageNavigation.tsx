@@ -6,7 +6,9 @@ interface IPageNavigationProps {
   itemsPerPage: number;
   onPageChange: (page: number) => void;
 }
-
+// totlaItems -> 총 데이터 개수
+// itemsPerPage -> 한번에 보여줄 데이터의 개수
+// onPageChange -> 페이지 번호 클릭시 실행되는 함수
 export const PageNavigation = ({
   totalItems,
   itemsPerPage,

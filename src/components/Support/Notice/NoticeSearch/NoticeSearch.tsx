@@ -1,20 +1,27 @@
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import './styeld.css';
 import { useNavigate } from 'react-router-dom';
+import { NoticeContext } from '../../../../provider/NoticeProvider';
 
 export const NoticeSearch = () => {
   const title = useRef<HTMLInputElement>(null);
   const [startDate, setStartDate] = useState<string>();
   const [endDate, setEndDate] = useState<string>();
   //startDate, endDate, title을 url에 navigate를 이용해서 올릴것임
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
+  const { setSearchData } = useContext(NoticeContext);
 
-  useEffect(() => {
-    window.location.search &&
-      navigate(window.location.pathname, { replace: true });
-  }, [navigate]);
+  // useEffect(() => {
+  //   window.location.search &&
+  //     navigate(window.location.pathname, { replace: true });
+  // }, [navigate]);
 
   const handlerSerch = () => {
+    setSearchData({
+      title: title.current ? title.current.value : '',
+      startDate: startDate || '',
+      endDate: endDate || '',
+    });
     // console.log(startDate, endDate, title?.current?.value);
     // title?.current?.value 이거는 밑의 if문과 같은 내용
     // if(title){
