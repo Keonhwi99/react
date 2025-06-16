@@ -8,6 +8,10 @@ import type {
   INoticeResponse,
 } from '../../../../model/Support/INotice';
 import { NoticeContext } from '../../../../provider/NoticeProvider';
+import { NoticeModal } from '../NoticeModal/NoticeModal';
+import { useRecoilState } from 'recoil';
+import { modalState } from '../../../../stores/modalState';
+import { Portal } from '../../../../common/Portal';
 
 // interface INotice {
 //   noticeID: number;
@@ -21,11 +25,14 @@ import { NoticeContext } from '../../../../provider/NoticeProvider';
 //   list : INotice[]
 // }
 
-export const NoticeMain = () => { // 다른 파일에서 NoticeMain을 호출할 때 무조건 있어야함.
+export const NoticeMain = () => {
+  // 다른 파일에서 NoticeMain을 호출할 때 무조건 있어야함.
   // const { search } = useLocation();
-  const [noticeList, setNoticeList] = useState<INotice[]>([]); // useState에 INotice가 배열상태[]로 
+  const [modal, setModal] = useRecoilState(modalState);
+  const [noticeList, setNoticeList] = useState<INotice[]>([]); // useState에 INotice가 배열상태[]로 만들어줌
   const [noticeCnt, setNoticeCnt] = useState<number>(0);
   const { searchData } = useContext(NoticeContext);
+  // const [noticeId, setNoticeId] = useState<number>(0);
 
   useEffect(() => {
     searchList();
@@ -50,8 +57,27 @@ export const NoticeMain = () => { // 다른 파일에서 NoticeMain을 호출할
     // 문제 1. axios로 서버를 갔다 와야해서 시간이 오래걸림
   };
 
+  // const postSuccess = () => {
+  //   setModal({ isOpen: false });
+  //   searchList();
+  // };
+
+  const noticeDetail = (id: number) => {
+    setModal({ isOpen: true, payload: id });
+  };
+
   return (
     <div className="notice-main-container">
+      {modal.isOpen && (
+        <Portal>
+          <NoticeModal
+            // postSuccess={postSuccess}
+            id={modal.payload as number}
+            reSearch={searchList}
+            // setId={setNoticeId}
+          ></NoticeModal>
+        </Portal>
+      )}
       <table className="notice-table">
         <thead className="notice-table-header">
           <tr>
@@ -67,7 +93,10 @@ export const NoticeMain = () => { // 다른 파일에서 NoticeMain을 호출할
               return (
                 <tr key={notice.noticeId} className="notice-table-row">
                   <td className="notice-cell">{notice.noticeId}</td>
-                  <td className="notice-cell cursor-pointer text-blue-600 hover:text-blue-800">
+                  <td
+                    className="notice-cell cursor-pointer text-blue-600 hover:text-blue-800"
+                    onClick={() => noticeDetail(notice.noticeId)}
+                  >
                     {notice.noticeTitle}
                   </td>
                   <td className="notice-cell">{notice.regDate}</td>

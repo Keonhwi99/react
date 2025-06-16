@@ -2,8 +2,11 @@ import { useContext, useEffect, useRef, useState } from 'react';
 import './styeld.css';
 import { useNavigate } from 'react-router-dom';
 import { NoticeContext } from '../../../../provider/NoticeProvider';
+import { useRecoilState } from 'recoil';
+import { modalState } from '../../../../stores/modalState';
 
 export const NoticeSearch = () => {
+  const [_, setModal] = useRecoilState(modalState);
   const title = useRef<HTMLInputElement>(null);
   const [startDate, setStartDate] = useState<string>();
   const [endDate, setEndDate] = useState<string>();
@@ -38,6 +41,10 @@ export const NoticeSearch = () => {
     navigate(queryString);
   };
 
+  const openModal = () => {
+    setModal({ isOpen: true });
+  };
+
   return (
     <div className="notice-container">
       <div className="input-box">
@@ -48,7 +55,7 @@ export const NoticeSearch = () => {
         ></input>
         <input type="date" onChange={(e) => setEndDate(e.target.value)}></input>
         <button onClick={handlerSerch}>검색</button>
-        <button>등록</button>
+        <button onClick={openModal}>등록</button>
       </div>
     </div>
   );
